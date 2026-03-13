@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #242424;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent: #00d4aa;
+            --accent-hover: #00f5c4;
+            --border: #333333;
+            --shadow: rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', 'Noto Sans SC', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* 背景效果 */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(0, 212, 170, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 180, 255, 0.06) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 头部 */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 48px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--accent), #00b4ff);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .datetime {
+            text-align: right;
+            color: var(--text-secondary);
+        }
+
+        .datetime .time {
+            font-size: 32px;
+            font-weight: 300;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -1px;
+        }
+
+        .datetime .date {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        /* 搜索框 */
+        .search-box {
+            margin-bottom: 48px;
+            animation: fadeInUp 0.6s ease-out 0.1s both;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 20px 28px;
+            font-size: 18px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 212, 170, 0.15);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        /* 快速链接 */
+        .quick-links {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        .quick-link {
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quick-link:hover {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .quick-link .icon {
+            font-size: 16px;
+        }
+
+        /* 网站分类 */
+        .section-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .category {
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease-out 0.3s both;
+        }
+
+        .sites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .site-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .site-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), #00b4ff);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .site-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px var(--shadow);
+            border-color: var(--accent);
+        }
+
+        .site-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .site-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .site-name {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .site-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-secondary);
+            font-size: 13px;
+            animation: fadeIn 0.6s ease-out 0.5s both;
+        }
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px 16px;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .datetime {
+                text-align: left;
+            }
+
+            .datetime .time {
+                font-size: 28px;
+            }
+
+            .sites-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .site-card {
+                padding: 16px;
+            }
+
+            .site-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .site-name {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">W</div>
+                <span class="logo-text">WorkHub</span>
+            </div>
+            <div class="datetime">
+                <div class="time" id="currentTime">00:00:00</div>
+                <div class="date" id="currentDate">加载中...</div>
+            </div>
+        </header>
+
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="搜索..." id="searchInput" autofocus>
+        </div>
+
+        <div class="quick-links">
+            <a href="https://www.google.com" target="_blank" class="quick-link">
+                <span class="icon">🔍</span> Google
+            </a>
+            <a href="https://github.com" target="_blank" class="quick-link">
+                <span class="icon">📂</span> GitHub
+            </a>
+            <a href="https://mail.qq.com" target="_blank" class="quick-link">
+                <span class="icon">📧</span> 邮箱
+            </a>
+            <a href="https://www.notion.so" target="_blank" class="quick-link">
+                <span class="icon">📝</span> Notion
+            </a>
+            <a href="https://slack.com" target="_blank" class="quick-link">
+                <span class="icon">💬</span> Slack
+            </a>
+        </div>
+
+        <!-- 集团工具 -->
+        <div class="category">
+            <div class="section-title">集团工具</div>
+            <div class="sites-grid">
+                <a href="https://c1.yonyoucloud.com/" target="_blank" class="site-card">
+                    <div class="site-icon">🏢</div>
+                    <div class="site-name">集团入口</div>
+                    <div class="site-desc">用友云门户</div>
+                </a>
+                <a href="https://gfjira.yyrd.com/" target="_blank" class="site-card">
+                    <div class="site-icon">📋</div>
+                    <div class="site-name">Jira</div>
+                    <div class="site-desc">项目管理平台</div>
+                </a>
+                <a href="https://git.yyrd.com/users/sign_in" target="_blank" class="site-card">
+                    <div class="site-icon">🐱</div>
+                    <div class="site-name">Git仓库</div>
+                    <div class="site-desc">代码托管</div>
+                </a>
+                <a href="https://yondesign.yonyoucloud.com/homepage/#/" target="_blank" class="site-card">
+                    <div class="site-icon">🎨</div>
+                    <div class="site-name">前端组件库</div>
+                    <div class="site-desc">YonDesign</div>
+                </a>
+                <a href="https://bip-pre.yonyoucloud.com/iuap-tinper/ucf-wh/lightning-docs/index.html#/" target="_blank" class="site-card">
+                    <div class="site-icon">⚡</div>
+                    <div class="site-name">TNE说明</div>
+                    <div class="site-desc">技术文档</div>
+                </a>
+                <a href="https://wiki.yyrd.com/" target="_blank" class="site-card">
+                    <div class="site-icon">📖</div>
+                    <div class="site-name">企业Wiki</div>
+                    <div class="site-desc">知识库</div>
+                </a>
+                <a href="https://devopscube.yyuap.com/" target="_blank" class="site-card">
+                    <div class="site-icon">☁️</div>
+                    <div class="site-name">私有云补丁</div>
+                    <div class="site-desc">DevOps平台</div>
+                </a>
+                <a href="https://mail.yonyou.com/" target="_blank" class="site-card">
+                    <div class="site-icon">📧</div>
+                    <div class="site-name">企业邮箱</div>
+                    <div class="site-desc">用友邮箱</div>
+                </a>
+                <a href="http://10.16.229.93:8900/upesn/" target="_blank" class="site-card">
+                    <div class="site-icon">📦</div>
+                    <div class="site-name">包地址下载</div>
+                    <div class="site-desc">内部仓库</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 开发工具 -->
+        <div class="category">
+            <div class="section-title">开发工具</div>
+            <div class="sites-grid">
+                <a href="https://code.visualstudio.com" target="_blank" class="site-card">
+                    <div class="site-icon">📝</div>
+                    <div class="site-name">VS Code</div>
+                    <div class="site-desc">代码编辑器</div>
+                </a>
+                <a href="https://github.com" target="_blank" class="site-card">
+                    <div class="site-icon">🐙</div>
+                    <div class="site-name">GitHub</div>
+                    <div class="site-desc">代码托管平台</div>
+                </a>
+                <a href="https://gitlab.com" target="_blank" class="site-card">
+                    <div class="site-icon">🦊</div>
+                    <div class="site-name">GitLab</div>
+                    <div class="site-desc">DevOps平台</div>
+                </a>
+                <a href="https://vercel.com" target="_blank" class="site-card">
+                    <div class="site-icon">▲</div>
+                    <div class="site-name">Vercel</div>
+                    <div class="site-desc">前端部署平台</div>
+                </a>
+                <a href="https://www.npmjs.com" target="_blank" class="site-card">
+                    <div class="site-icon">📦</div>
+                    <div class="site-name">npm</div>
+                    <div class="site-desc">Node包管理器</div>
+                </a>
+                <a href="https://stackblitz.com" target="_blank" class="site-card">
+                    <div class="site-icon">⚡</div>
+                    <div class="site-name">StackBlitz</div>
+                    <div class="site-desc">在线IDE</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 文档资料 -->
+        <div class="category">
+            <div class="section-title">文档资料</div>
+            <div class="sites-grid">
+                <a href="https://developer.mozilla.org" target="_blank" class="site-card">
+                    <div class="site-icon">📚</div>
+                    <div class="site-name">MDN</div>
+                    <div class="site-desc">Web开发文档</div>
+                </a>
+                <a href="https://docs.microsoft.com" target="_blank" class="site-card">
+                    <div class="site-icon">📘</div>
+                    <div class="site-name">Microsoft Docs</div>
+                    <div class="site-desc">微软官方文档</div>
+                </a>
+                <a href="https://react.dev" target="_blank" class="site-card">
+                    <div class="site-icon">⚛️</div>
+                    <div class="site-name">React</div>
+                    <div class="site-desc">React官方文档</div>
+                </a>
+                <a href="https://vuejs.org" target="_blank" class="site-card">
+                    <div class="site-icon">💚</div>
+                    <div class="site-name">Vue</div>
+                    <div class="site-desc">Vue官方文档</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 常用网站 -->
+        <div class="category">
+            <div class="section-title">常用网站</div>
+            <div class="sites-grid">
+                <a href="https://www.google.com" target="_blank" class="site-card">
+                    <div class="site-icon">🔍</div>
+                    <div class="site-name">Google</div>
+                    <div class="site-desc">搜索引擎</div>
+                </a>
+                <a href="https://mail.qq.com" target="_blank" class="site-card">
+                    <div class="site-icon">📧</div>
+                    <div class="site-name">QQ邮箱</div>
+                    <div class="site-desc">邮件服务</div>
+                </a>
+                <a href="https://www.figma.com" target="_blank" class="site-card">
+                    <div class="site-icon">🎨</div>
+                    <div class="site-name">Figma</div>
+                    <div class="site-desc">设计工具</div>
+                </a>
+                <a href="https://chat.openai.com" target="_blank" class="site-card">
+                    <div class="site-icon">🤖</div>
+                    <div class="site-name">ChatGPT</div>
+                    <div class="site-desc">AI对话助手</div>
+                </a>
+                <a href="https://www.notion.so" target="_blank" class="site-card">
+                    <div class="site-icon">📝</div>
+                    <div class="site-name">Notion</div>
+                    <div class="site-desc">笔记与知识库</div>
+                </a>
+                <a href="https://slack.com" target="_blank" class="site-card">
+                    <div class="site-icon">💬</div>
+                    <div class="site-name">Slack</div>
+                    <div class="site-desc">团队协作</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- AI工具 -->
+        <div class="category">
+            <div class="section-title">AI工具</div>
+            <div class="sites-grid">
+                <a href="https://claude.ai" target="_blank" class="site-card">
+                    <div class="site-icon">🧠</div>
+                    <div class="site-name">Claude</div>
+                    <div class="site-desc">AI编程助手</div>
+                </a>
+                <a href="https://copilot.microsoft.com" target="_blank" class="site-card">
+                    <div class="site-icon">⌨️</div>
+                    <div class="site-name">GitHub Copilot</div>
+                    <div class="site-desc">AI代码补全</div>
+                </a>
+                <a href="https://www.midjourney.com" target="_blank" class="site-card">
+                    <div class="site-icon">🎭</div>
+                    <div class="site-name">Midjourney</div>
+                    <div class="site-desc">AI图像生成</div>
+                </a>
+                <a href="https://perplexity.ai" target="_blank" class="site-card">
+                    <div class="site-icon">🔮</div>
+                    <div class="site-name">Perplexity</div>
+                    <div class="site-desc">AI搜索引擎</div>
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            <p>双击搜索框可直接搜索 · 按 Enter 键确认</p>
+        </footer>
+    </div>
+
+    <script>
+        // 更新时间
+        function updateTime() {
+            const now = new Date();
+
+            // 时间
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
+
+            // 日期
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long'
+            };
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', options);
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // 搜索功能
+        document.getElementById('searchInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query) {
+                    window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+                    this.value = '';
+                }
+            }
+        });
+
+        // 双击搜索框清除内容
+        document.getElementById('searchInput').addEventListener('dblclick', function() {
+            this.value = '';
+            this.focus();
+        });
+    </script>
+</body>
+</html>
