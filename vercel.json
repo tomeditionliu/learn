@@ -1,0 +1,5 @@
+{
+  "redirects": [
+    { "source": "/WorkHub.html", "destination": "/", "permanent": true }
+  ]
+}
