@@ -262,6 +262,27 @@
             text-overflow: ellipsis;
         }
 
+        .address-notes {
+            margin-bottom: 32px;
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+
+        .address-notes-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .address-notes-content {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        }
         /* 页脚 */
         footer {
             text-align: center;
@@ -336,6 +357,14 @@
 
             .site-name {
                 font-size: 14px;
+            }
+
+            .address-notes-panel {
+                padding: 16px;
+            }
+
+            .address-notes-content {
+                font-size: 12px;
             }
         }
     </style>
@@ -562,6 +591,12 @@
             </div>
         </div>
 
+        <div class="address-notes">
+            <div class="section-title">项目地址便签区</div>
+            <div class="address-notes-panel">
+                <pre class="address-notes-content" id="addressNotesContent"></pre>
+            </div>
+        </div>
         <footer>
             <p>双击搜索框可直接搜索 · 按 Enter 键确认</p>
         </footer>
@@ -591,6 +626,86 @@
         updateTime();
         setInterval(updateTime, 1000);
 
+        const addressNotesData = [
+            {
+                group: '工作圈',
+                links: [
+                    { label: 'web', url: 'https://bip-daily.yonyoucloud.com/yonbip-ec-feed/ucf-wh/webWorkCircle/index.html#/home/homepage' },
+                    { label: 'mobile', url: 'https://bip-daily.yonyoucloud.com/yonbip-ec-feed/ucf-wh/mobileWorkCircle/index.html#/' }
+                ]
+            },
+            {
+                group: '投票',
+                links: [
+                    { label: 'web', url: 'https://bip-daily.yonyoucloud.com/yonbip-ec-feed/ucf-wh/vote-web/index.html#/vote/all' },
+                    { label: 'mobile', url: 'https://bip-daily.yonyoucloud.com/yonbip-ec-feed/ucf-wh/vote/index.html#/' }
+                ]
+            },
+            {
+                group: '微邮',
+                links: [
+                    { label: 'web', url: 'https://bip-daily.yonyoucloud.com/yonbip-ec-feed/ucf-wh/wemail/index.html#/vote/all' },
+                    { label: 'mobile', url: 'https://bip-test.yonyoucloud.com/yonbip-ec-feed/ucf-wh/wemail-mobile/index.html#/' }
+                ]
+            },
+            {
+                group: '任务清单',
+                links: [
+                    { label: 'web', url: 'https://bip-daily.yonyoucloud.com/yonbip-ec-logger/ucf-wh/project/task-center/web/index.html#/' },
+                    { label: 'local', url: 'https://local-daily.yonyoucloud.com:3001/yonbip-ec-logger/ucf-wh/project/task-center/web/index.html' }
+                ]
+            },
+            {
+                group: '任务',
+                links: [
+                    { label: 'web', url: 'https://bip-daily.yonyoucloud.com/yonbip-ec-logger/ucf-wh/project/next/web/index.html#/task/myTask' },
+                    { label: 'mobile', url: 'https://bip-daily.yonyoucloud.com/yonbip-ec-logger/ucf-wh/project/next/dist/index.html#/task/list' },
+                    { label: 'local-dist', url: 'https://local-daily.yonyoucloud.com:8080/dist/index.html#/task/list' },
+                    { label: 'local-web', url: 'https://local-daily.yonyoucloud.com:8080/yonbip-ec-logger/ucf-wh/project/next/web/index.html#/task/myTask' }
+                ]
+            },
+            {
+                group: '项目',
+                links: [
+                    { label: 'web', url: 'https://bip-daily.yonyoucloud.com/yonbip-ec-logger/ucf-wh/project/next/web/index.html#/project/myJoin' },
+                    { label: 'mobile', url: 'https://bip-daily.yonyoucloud.com/yonbip-ec-logger/ucf-wh/project/next/dist/index.html#/project/list' }
+                ]
+            },
+            {
+                group: '汇报',
+                links: [
+                    { label: 'web', url: 'https://bip-daily.yonyoucloud.com/yonbip-ec-logger/ucf-wh/logger/next/web/index.html?tenantId=0000KN5SBWC43JE9SF0000&locale=zh_CN&SF=ALL&ts=1769409698867#/?v=839733&hasXT=true' },
+                    { label: 'test-web', url: 'https://test.yonyoucloud.com:8888/web/index.html' },
+                    { label: 'test-dist', url: 'https://test.yonyoucloud.com:8888/dist/index.html' }
+                ]
+            },
+            {
+                group: '闪记',
+                links: [
+                    { label: 'web', url: 'https://test.yonyoucloud.com:8080/web/index.html#/record/home' },
+                    { label: 'mobile', url: 'https://bip-test.yonyoucloud.com/yonbip-ec-logger/ucf-wh/shanji/dist/index.html#/home' },
+                    { label: 'test-dist', url: 'https://test.yonyoucloud.com:8080/dist/index.html#/home' }
+                ]
+            }
+        ];
+
+        function renderAddressNotes() {
+            const container = document.getElementById('addressNotesContent');
+            if (!container) {
+                return;
+            }
+
+            const content = addressNotesData
+                .map(item => {
+                    const lines = item.links.map(link => `${link.label}-${link.url}`);
+                    return [`# ${item.group}`, ...lines].join('\n');
+                })
+                .join('\n\n');
+
+            container.textContent = content;
+        }
+
+        renderAddressNotes();
         // 搜索功能
         document.getElementById('searchInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
@@ -610,3 +725,4 @@
     </script>
 </body>
 </html>
+
